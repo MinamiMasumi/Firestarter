@@ -31,11 +31,12 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        MapData = ConvertTo2DLayer(mapData);
+        CreateMap();
         //Player = GameObject.Find("Player(KARI)");
         //playerScriput = GameObject.Find("Player(KARI)").GetComponent<PlayerController>();
-        OutputMap(mapData);
         //ConvertMapCollisionData(mapData);
-        MapData = CreateMap(mapData);
+
     }
 
     // Update is called once per frame
@@ -56,19 +57,19 @@ public class GameManager : MonoBehaviour {
     //}
 
     //マップデータを元にマップタイルを配置する。
-    void OutputMap(int[,] mapData)
+    void CreateMap()
     {
-        int y = mapData.GetLength(0);
-        int x = mapData.GetLength(1);
+        //int y = mapData.GetLength(0);
+        //int x = mapData.GetLength(1);
         GameObject instanceObject;
         Vector3 position;
 
-
-        for (int i = 0; i < y; i++)
+        MapData.Dump();
+        for (int i = 0; i < MapData.Height; i++)
         {
-            for (int j = 0; j < x; j++)
+            for (int j = 0; j < MapData.Width; j++)
             {
-                if (mapData[i, j] == 1)
+                if (MapData.Get(j,i) == 1)
                 {
                     position = new Vector3(((float)j*50 - 400), ((float)i*50 - 225) * -1, 0);
 
@@ -76,6 +77,7 @@ public class GameManager : MonoBehaviour {
                     instanceObject.transform.SetParent(canvasGame.transform, false);
                     instanceObject.transform.localPosition = position;
                     instanceObject.name = "" + mapTile00.name + "(" + i + "," + j + ")";
+                    
                 }
                 //else if (mapData[i, j] == 2)
                 //{
@@ -83,7 +85,6 @@ public class GameManager : MonoBehaviour {
                 //    instanceObject = Instantiate(mapTile01) as GameObject;
                 //    instanceObject.transform.position = position;
                 //    instanceObject.name = "" + mapTile01.name + "(" + i + "," + j + ")";
-                
             }
         }
     }
@@ -113,7 +114,7 @@ public class GameManager : MonoBehaviour {
     //}
 
     //Layer2Dでマップを管理する。（テスト）
-    Layer2D CreateMap(int[,] mapData)
+    Layer2D ConvertTo2DLayer(int[,] mapData)
     {
         Layer2D _layer = null;
         int h = mapData.GetLength(0);
@@ -128,7 +129,7 @@ public class GameManager : MonoBehaviour {
             for (int j = 0; j < w; j++)
             {
                 k = (h - i) - 1;
-                _layer.Set(k, j, mapData[k, j]);
+                _layer.Set(j, i, mapData[i, j]);
             }
         }
 
